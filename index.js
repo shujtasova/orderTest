@@ -1,3 +1,4 @@
+//Получить список продуктов из API
 document.addEventListener("DOMContentLoaded", () => {
   getProducts();
 });
@@ -14,17 +15,18 @@ async function getProducts() {
   });
 }
 
+//Добавить продукт
 const btnAdd = document.querySelector(".btn-add");
 btnAdd.addEventListener("click", addProduct);
 async function addProduct(e) {
   e.preventDefault();
-  const selectProduct = document.querySelector("#selectProduct"); 
-  const quantityInput = document.querySelector("#quantityInput"); 
+  const selectProduct = document.querySelector("#selectProduct"); //доступ к селект
+  const quantityInput = document.querySelector("#quantityInput"); //доступ к инпут строке
 
-  const productId = selectProduct.value; 
-  const productName = selectProduct.options[selectProduct.selectedIndex].text;
-  const quantity = parseInt(quantityInput.value, 10); 
-  const productPrice = await getProductPrice(productId);
+  const productId = selectProduct.value; //доступ к выбранному продукту по ID
+  const productName = selectProduct.options[selectProduct.selectedIndex].text; // доступ к названию выбранного продукта
+  const quantity = parseInt(quantityInput.value, 10); // преобразование строки к числу
+  const productPrice = await getProductPrice(productId); // доступ к цене выбранного продукта
 
   if (!productId || isNaN(quantity) || quantity <= 0) {
     Swal.fire({
@@ -36,23 +38,46 @@ async function addProduct(e) {
 
   const productTable = document.querySelector("#productTable");
   const tbody = productTable.querySelector("tbody");
-  const newRow = tbody.insertRow();
 
-  const cell1 = newRow.insertCell(0);
-  const cell2 = newRow.insertCell(1);
-  const cell3 = newRow.insertCell(2);
+  // Проверяем, есть ли уже продукт с таким product_id в заказе
+  const existingRow = Array.from(tbody.children).find((row) => {
+    const existingProductId = row.dataset.productId;
+    return existingProductId && parseInt(existingProductId, 10) === parseInt(productId, 10);
+  });
+  
 
-  cell2.dataset.productId = productId;
+  if (existingRow) {
+    // Увеличиваем количество, если продукт уже добавлен
+    const existingQuantityCell = existingRow.cells[1];
+    const existingQuantity = parseInt(existingQuantityCell.textContent, 10);
+    existingQuantityCell.textContent = `${existingQuantity + quantity} шт.`;
 
-  cell1.textContent = productName;
-  cell2.textContent = `${quantity} шт.`;
-  cell3.textContent = (productPrice * quantity).toFixed(2);
+    // Обновляем стоимость
+    const existingPriceCell = existingRow.cells[2];
+    const existingPrice = parseFloat(existingPriceCell.textContent);
+    existingPriceCell.textContent = (existingPrice + productPrice * quantity).toFixed(2);
+  } else {
+    // Если продукт не добавлен, создаем новую строку
+    const newRow = tbody.insertRow();
+    const cell1 = newRow.insertCell(0);
+    const cell2 = newRow.insertCell(1);
+    const cell3 = newRow.insertCell(2);
 
-  quantityInput.value = "";
+    // Сохраняем product_id в data-product-id атрибуте строки
+    newRow.dataset.productId = productId;
 
+    cell1.textContent = productName;
+    cell2.textContent = `${quantity} шт.`;
+    cell3.textContent = (productPrice * quantity).toFixed(2);
+  }
+
+  quantityInput.value = ""; // Сбросить поле ввода количества после добавления
+
+  // После добавления продукта, обновить итоговую сумму
   updateTotalAmount();
 }
 
+//Получить цену товара из API
 async function getProductPrice(productId) {
   const res = await fetch(
     `https://dev-su.eda1.ru/test_task/products.php?id=${productId}`
@@ -65,35 +90,41 @@ async function getProductPrice(productId) {
   if (product) {
     return product.price;
   } else {
+    // Если товар не найден, вернуть некоторое значение по умолчанию или обработать ошибку
     console.error(`Товар с id ${productId} не найден.`);
     return null;
   }
 }
 
+//Обновить итого
 function updateTotalAmount() {
-  const sum = document.querySelector(".sum");
+  const sum = document.querySelector(".sum"); //Доступ к итого
   let totalAmount = 0;
   const thirdColumn = document.querySelectorAll(
     "#productTable tbody td:nth-child(3)"
   );
   thirdColumn.forEach((cell) => {
-    const price = parseFloat(cell.textContent);
+    const price = parseFloat(cell.textContent); //принимает строку и возвращает десятичное число
     if (!isNaN(price)) {
       totalAmount += price;
     }
   });
 
+  // Оставляем одну цифру после запятой в мобильной версии
   const decimalPlaces = window.innerWidth < 500 ? 2 : 0;
   sum.textContent = totalAmount.toFixed(decimalPlaces);
 }
 
+//Сохранить
 const btnSave = document.querySelector(".btn-save");
 btnSave.addEventListener("click", saveOrder);
 
 async function saveOrder() {
   try {
+    // Получение данных для отправки
     const orderData = getOrderData();
 
+    // Проверка, что есть хотя бы один продукт в заказе
     if (orderData.length === 0) {
       Swal.fire({
         icon: "error",
@@ -102,6 +133,7 @@ async function saveOrder() {
       return;
     }
 
+    // Отправка данных на сервер
     const res = await fetch("https://dev-su.eda1.ru/test_task/save.php", {
       method: "POST",
       headers: {
@@ -112,14 +144,17 @@ async function saveOrder() {
 
     const resReceived = await res.json();
 
+    // Проверка успешности сохранения заказа
     if (resReceived.success) {
       Swal.fire({
         title: "Заказ успешно сохранен!",
         text: `Номер заказа: ${resReceived.code}`,
         icon: "success",
       });
+      // Очистка данных заказа после успешного сохранения
       clearOrderData();
     } else {
+      // В случае ошибки отобразить соответствующее сообщение
       Swal.fire({
         icon: "error",
         text: "Ошибка при сохранении заказа"
@@ -131,6 +166,7 @@ async function saveOrder() {
   }
 }
 
+// Получение данных заказа
 function getOrderData() {
   const orderData = [];
   const tableRows = document.querySelectorAll("#productTable tbody tr");
@@ -146,6 +182,7 @@ function getOrderData() {
   return orderData;
 }
 
+// Очистка данных заказа
 function clearOrderData() {
   const tableBody = document.querySelector("#productTable tbody");
   const sum = document.querySelector(".sum");
