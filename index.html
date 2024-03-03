@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header><span>Test project</span></header>
+    <main class="main">
+      <form class="form">
+        <div class="product">
+          <label for="selectProduct">Выберите продукцию:</label>
+          <select id="selectProduct" name="selectProduct" required></select>
+        </div>
+
+        <div class="quantity">
+          <label for="quantityInput">Введите количество:</label>
+          <input type="number" min="1" max="50" id="quantityInput" name="quantityInput" required />
+        </div>
+
+        <button type="button" class="btn-add">
+          Добавить
+        </button>
+      </form>
+
+      <div class="productTable">
+        <table id="productTable">
+          <thead>
+            <tr>
+              <th>Название товара</th>
+              <th>Количество</th>
+              <th>Стоимость</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Здесь будут добавляться строки с использованием JavaScript -->
+          </tbody>
+        </table>
+
+        <div class="container">
+          <hr />
+
+          <div class="total-container">
+            <p class="total"><span class="total-mobile">Итого:</span> <span class="sum"></span></p>
+          </div>
+
+          <div class="btn-container">
+            <button type="button" class="btn-save">
+              Сохранить
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="footer"><p>Very intresting tail</p></footer>
+
+    <script src="index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </body>
+</html>

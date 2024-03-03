@@ -1,0 +1,172 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+body {
+  color: #222222;
+  font-family: "Roboto", sans-serif;
+  font-size: 24px;
+  background-color: #e5e5e5;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  background-color: #755858;
+  padding: 0.5%;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin: 1%;
+}
+
+.product,
+.quantity {
+  display: flex;
+  flex-direction: column;
+  margin: 2% 2% 5% 2%;
+}
+
+label {
+  margin-bottom: 3%;
+}
+
+select,
+input {
+  padding: 1%;
+  border-radius: 0%;
+  color: #0170ae;
+  font-family: "Roboto", sans-serif;
+  font-size: 24px;
+}
+
+.btn-add {
+  background-color: #2fa6ea;
+  font-family: "Roboto", sans-serif;
+  font-size: 24px;
+  color: #ffffff;
+  border: none;
+  padding: 1%;
+  margin: 5% 2% 2% 2%;
+  border-radius: 4px;
+}
+
+.productTable {
+  flex: 2;
+  margin: 1% 5% 1% 1%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 5%;
+}
+
+th {
+  color: #0170ae;
+  font-family: "Roboto", sans-serif;
+  font-weight: lighter;
+  padding: 1% 1% 2% 0;
+}
+
+th:first-child,
+td:first-child {
+  text-align: left;
+}
+
+th:last-child,
+th:nth-child(2),
+td:nth-child(2),
+td:last-child {
+  text-align: right;
+}
+
+hr {
+  border-color: #2fa6ea;
+}
+
+.total-container {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.total {
+  font-weight: bold;
+}
+
+button {
+  cursor: pointer;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-save {
+  background-color: #61a91a;
+  font-family: "Roboto", sans-serif;
+  font-size: 24px;
+  color: #ffffff;
+  border: none;
+  padding: 1%;
+  margin: 5% 2% 2% 2%;
+  width: 50%;
+  border-radius: 4px;
+}
+
+.footer {
+  background-color: #222222;
+  padding: 2%;
+  color: #ffffff;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+@media all and (max-width: 500px) {
+  .btn-add,
+  .btn-save,
+  select,
+  input {
+    padding: 3%;
+  }
+  .btn-save {
+    width: 100%;
+  }
+  th,
+  .total-mobile {
+    display: none;
+  }
+  #productTable tr {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 5%;
+  }
+  #productTable tr td:nth-child(1) {
+    width: 100%;
+  }
+  #productTable tr td:nth-child(2),
+  #productTable tr td:nth-child(3) {
+    font-weight: bold;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */
